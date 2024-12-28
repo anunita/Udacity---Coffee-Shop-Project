@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from .database.models import db_drop_and_create_all, setup_db, Drink
-from .auth.auth import AuthError, requires_auth
+#from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
 setup_db(app)
@@ -17,7 +17,8 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-# db_drop_and_create_all()
+with app.app_context():
+    db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -28,6 +29,19 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route("/drinks", methods=["GET"])
+def get_drinks():
+    try:
+        drinks = Drink.query.all()
+
+        return jsonify({
+                "success": True,
+                "drinks": [drink.short() for drink in drinks]             
+        }), 200
+
+    except Exception as e:
+        print(f"Error retrieving drinks: {e}")
+        abort(404)
 
 
 '''
@@ -39,6 +53,19 @@ CORS(app)
         or appropriate status code indicating reason for failure
 '''
 
+@app.route("/drinks-detail", methods=["GET"])
+def get_drinks_detail():
+    try:
+        drinks = Drink.query.all()
+
+        return jsonify({
+                "success": True,
+                "drinks": [drink.long() for drink in drinks]             
+        }), 200
+
+    except Exception as e:
+        print(f"Error retrieving drinks: {e}")
+        abort(404)
 
 '''
 @TODO implement endpoint
@@ -101,7 +128,13 @@ def unprocessable(error):
                     }), 404
 
 '''
-
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "resource not found"
+    }), 404
 '''
 @TODO implement error handler for 404
     error handler should conform to general task above
