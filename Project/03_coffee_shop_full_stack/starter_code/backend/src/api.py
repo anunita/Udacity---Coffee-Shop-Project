@@ -115,13 +115,11 @@ def add_drink(jwt):
 @app.route("/drinks/<id>", methods=['PATCH'])
 @requires_auth('patch:drinks')
 def update_drink(jwt, id):
-
+    body = request.get_json()
     drink = Drink.query.get(id)
 
     if drink:
         try:
-
-            body = request.get_json()
 
             title = body.get('title')
             recipe = body.get('recipe')
@@ -129,7 +127,7 @@ def update_drink(jwt, id):
             if title:
                 drink.title = title
             if recipe:
-                drink.title = recipe
+                drink.recipe = json.dumps(body['recipe'])
 
             drink.update()
 
