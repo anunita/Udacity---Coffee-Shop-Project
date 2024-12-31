@@ -10,7 +10,7 @@ export const environment = {
     audience: 'dev', // the audience set for the auth0 app
     clientId: '6VqfGPj84uFGthZkre868WkbqLWmPNTq', // the client id generated for the auth0 app
     //callbackURL: 'http://localhost:8080/login-results/tabs/user-page', // the base url of the running ionic application. 
-    callbackURL: 'http://localhost:8100/login-results', // the base url of the running ionic application. 
-    //callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
+    //callbackURL: 'http://localhost:8100/login-results', // the base url of the running ionic application. 
+    callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
   }
 };
